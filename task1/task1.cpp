@@ -101,18 +101,12 @@ int main() {
       in8[i] = random()%100;
       in64[i] = random()%100;
    }
-//   unsigned chunkSize = 512*1024;
-//   unsigned chunk = (inCount*sizeof(uint8_t)) / chunkSize;
-   //for (unsigned i=0; i<chunk; i++)
-   
- //  cout<<(count8(in8, inCount/chunk, 50) ) <<" "<< (   count8SIMD(in8, inCount/chunk, 50))<<endl;
-	
 
    // test
-   // for (auto sel : {1, 10, 50, 90, 99}) {
-   //   assert(count8(in8, sel, inCount)==count8SIMD(in8, sel, inCount));
-   //   assert(count64(in64, sel, inCount)==count64SIMD(in64, sel, inCount));
-   //}
+   for (auto sel : {1, 10, 50, 90, 99}) {
+      assert(count8(in8, sel, inCount)==count8SIMD(in8, sel, inCount));
+      assert(count64(in64, sel, inCount)==count64SIMD(in64, sel, inCount));
+   }
 
    PerfEvents e;
    unsigned chunkSize = 512*1024;
