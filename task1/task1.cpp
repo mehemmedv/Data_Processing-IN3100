@@ -48,31 +48,32 @@ void* malloc_huge(size_t size) {
 unsigned count8(int8_t* in, unsigned inSize, int8_t x) {
    __asm volatile(""); // make sure this is not optimized away when called multiple times
   unsigned count = 0;
-   for (unsigned i=0; i<inSize; i++)
+   for (unsigned i=0; i<inSize; i++){
       if (in[i] < x)
          count++;
+   }
    return count;
 }
 unsigned count64(int64_t* in, unsigned inSize, int64_t x) {
    __asm volatile(""); // make sure this is not optimized away when called multiple times
    unsigned count = 0;
-   for (unsigned i=0; i<inSize; i++)
+   for (unsigned i=0; i<inSize; i++){
       if (in[i] < x)
          count++;
+   }
    return count;
 }
 
 unsigned count8SIMD(int8_t* in, unsigned inSize, int8_t x){
    __asm volatile("");
    unsigned count = 0;
-   __m512i x_512 = _mm512_set1_epi8 (x);
+   __m512i x_512 = _mm512_set1_epi8(x);
    
-   for(int i = 0; i < inSize; i += 64){
+   for(int i = 0; i < inSize; i += 32){
       __m512i cur_nums = _mm512_loadu_si512(in + i);
       __mmask64 mask = _mm512_cmplt_epi8_mask(cur_nums, x_512);
       count += __builtin_popcount(mask);
    }
-   
    return count;
 }
 
@@ -100,11 +101,11 @@ int main() {
       in8[i] = random()%100;
       in64[i] = random()%100;
    }
-   unsigned chunkSize = 512*1024;
-   unsigned chunk = (inCount*sizeof(uint8_t)) / chunkSize;
+//   unsigned chunkSize = 512*1024;
+//   unsigned chunk = (inCount*sizeof(uint8_t)) / chunkSize;
    //for (unsigned i=0; i<chunk; i++)
    
-   cout<<(count8(in8, inCount/chunk, 50) ) <<" "<< (   count8SIMD(in8, inCount/chunk, 50))<<endl;
+ //  cout<<(count8(in8, inCount/chunk, 50) ) <<" "<< (   count8SIMD(in8, inCount/chunk, 50))<<endl;
 	
 
    // test
@@ -113,7 +114,7 @@ int main() {
    //   assert(count64(in64, sel, inCount)==count64SIMD(in64, sel, inCount));
    //}
 
-   /*PerfEvents e;
+   PerfEvents e;
    unsigned chunkSize = 512*1024;
 
    for (auto sel : {1, 10, 50, 90, 99}) {
@@ -138,7 +139,7 @@ int main() {
                assert(count64SIMD(in64, inCount/chunk, sel));
          }, repeat, {{"sel", std::to_string(sel)}});
       
-   }*/
+   }
 
    return 0;
 }
