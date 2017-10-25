@@ -104,8 +104,8 @@ int main() {
 
    // test
    for (auto sel : {1, 10, 50, 90, 99}) {
-      assert(count8(in8, sel, inCount)==count8SIMD(in8, sel, inCount));
-      assert(count64(in64, sel, inCount)==count64SIMD(in64, sel, inCount));
+      assert(count8(in8, inCount, sel)==count8SIMD(in8, inCount, sel));
+      assert(count64(in64, inCount, sel)==count64SIMD(in64, inCount, sel));
    }
 
    PerfEvents e;
